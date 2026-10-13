@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v0lky1 Overlay - Inloggen</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #18181b;
+      color: #efeff1;
+    }
+    main { text-align: center; max-width: 420px; padding: 24px; }
+    button {
+      font: inherit;
+      font-weight: 600;
+      padding: 12px 24px;
+      margin: 6px;
+      border: 0;
+      border-radius: 6px;
+      background: #9147ff;
+      color: #fff;
+      cursor: pointer;
+    }
+    button.secondary { background: #3a3a3d; }
+    button:hover { filter: brightness(1.15); }
+    h2 { margin-top: 40px; font-size: 18px; }
+    #message, #ytm-message { margin: 16px 0; }
+    .error { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>v0lky1 Overlay</h1>
+    <p id="message">Even laden…</p>
+    <div id="actions"></div>
+
+    <h2>YouTube Music</h2>
+    <p id="ytm-message"></p>
+    <div id="ytm-actions"></div>
+  </main>
+
+  <script type="module">
+    import { login, logout, handleCallback, getSession } from "./js/auth.js";
+    import { getToken, pair, unpair } from "./js/ytm.js";
+
+    const message = document.getElementById("message");
+    const actions = document.getElementById("actions");
+    const ytmMessage = document.getElementById("ytm-message");
+    const ytmActions = document.getElementById("ytm-actions");
+
+    function addButton(label, onClick, secondary = false, target = actions) {
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      if (secondary) btn.className = "secondary";
+      btn.addEventListener("click", onClick);
+      target.append(btn);
+    }
+
+    function renderYtm() {
+      ytmActions.replaceChildren();
+      ytmMessage.className = "";
+      if (getToken()) {
+        ytmMessage.textContent = "Gekoppeld.";
+        addButton("Opnieuw koppelen", pairYtm, true, ytmActions);
+        addButton("Ontkoppelen", () => { unpair(); renderYtm(); }, true, ytmActions);
+      } else {
+        ytmMessage.textContent = "Niet gekoppeld. Start de YouTube Music Desktop App met de Companion Server aan.";
+        addButton("YouTube Music koppelen", pairYtm, false, ytmActions);
+      }
+    }
+
+    async function pairYtm() {
+      ytmActions.replaceChildren();
+      ytmMessage.textContent = "Keur de koppeling goed in de YouTube Music-app (binnen 30 seconden)…";
+      try {
+        await pair();
+        renderYtm();
+      } catch (err) {
+        renderYtm();
+        ytmMessage.textContent = `Koppelen mislukt: ${err.message}`;
+        ytmMessage.className = "error";
+      }
+    }
+
+    async function init() {
+      try {
+        await handleCallback();
+      } catch (err) {
+        message.textContent = err.message;
+        message.className = "error";
+        addButton("Opnieuw inloggen", login);
+        return;
+      }
+
+      const result = await getSession();
+      if (result.session) {
+        message.textContent = `Ingelogd als ${result.session.login}. Je kunt de overlay nu verversen.`;
+        addButton("Uitloggen", () => { logout(); location.reload(); }, true);
+      } else if (result.error === "missing-scopes") {
+        message.textContent = `Er ontbreken rechten (${result.missing.join(", ")}). Log opnieuw in.`;
+        addButton("Inloggen met Twitch", login);
+      } else if (result.error === "network") {
+        message.textContent = "Kan Twitch niet bereiken. Probeer het later opnieuw.";
+        message.className = "error";
+      } else {
+        message.textContent = "Je bent nog niet ingelogd.";
+        addButton("Inloggen met Twitch", login);
+      }
+    }
+
+    init();
+    renderYtm();
+  </script>
+</body>
+</html>

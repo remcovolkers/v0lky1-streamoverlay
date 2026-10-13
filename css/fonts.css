@@ -1,0 +1,14 @@
+/* Lokale fonts: werkt offline in OBS en op GitHub Pages */
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope-wght--regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope-wght--medium.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope-wght--semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope-wght--bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url("../assets/fonts/manrope-wght--extrabold.ttf") format("truetype"); font-weight: 800; font-display: swap; }
+
+@font-face { font-family: "Chakra Petch"; src: url("../assets/fonts/chakrapetch-regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("../assets/fonts/chakrapetch-medium.ttf") format("truetype"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("../assets/fonts/chakrapetch-semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Chakra Petch"; src: url("../assets/fonts/chakrapetch-bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+
+@font-face { font-family: "Arimo"; src: url("../assets/fonts/arimo-wght--regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Arimo"; src: url("../assets/fonts/arimo-wght--bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }

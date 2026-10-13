@@ -1,0 +1,163 @@
+﻿/* Alerts: kaart met animaties.
+   Stijlen: .hype (accentkleur, krabbels + vonken) en .calm (rustig, voor follows en rewards) */
+.alert {
+  position: absolute;
+  left: 50%;
+  top: 120px;
+  transform: translateX(-50%);
+  width: 620px;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 22px 28px 22px 22px;
+  background: var(--bg);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border-radius: 22px;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 0 1px rgba(var(--accent-rgb), 0.1),
+    0 0 60px rgba(var(--accent-rgb), 0.25),
+    0 30px 60px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: card-pop 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.card.out {
+  animation: card-out 0.5s ease-in forwards;
+}
+
+/* Lichtreflectie die over de kaart glijdt */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.12) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: card-shine 1.4s 0.4s ease-out;
+}
+
+.card img {
+  width: 78px;
+  height: 92px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(var(--accent-rgb), 0.5));
+}
+
+.card .k {
+  font: 700 13px Manrope;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.card .nm {
+  font: 700 42px/1.05 "Chakra Petch";
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+  background: linear-gradient(90deg, #fff, var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card .d {
+  font-size: 16px;
+  color: #c3c8d0;
+  font-weight: 600;
+}
+
+.card .d .hl {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Rustige variant */
+.card.calm {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.card.calm .k {
+  color: #c3c8d0;
+}
+
+.card.calm .nm {
+  background: none;
+  color: #fff;
+}
+
+/* Krabbels (hype) */
+.claws {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-18deg);
+  display: flex;
+  gap: 9px;
+}
+
+.claws i {
+  width: 6px;
+  height: 80px;
+  border-radius: 6px;
+  background: linear-gradient(var(--accent), transparent);
+  transform-origin: top;
+  animation: claw-slash 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.claws i:nth-child(2) {
+  animation-delay: 0.08s;
+  height: 96px;
+}
+
+.claws i:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+/* Vonken (hype) */
+.spark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: spark-fly 1.4s cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes card-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.85);
+  }
+}
+
+@keyframes card-out {
+  to {
+    opacity: 0;
+    transform: translateY(-24px) scale(0.95);
+  }
+}
+
+@keyframes card-shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes claw-slash {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes spark-fly {
+  to {
+    transform: translate(var(--x), var(--y)) rotate(540deg);
+    opacity: 0;
+  }
+}

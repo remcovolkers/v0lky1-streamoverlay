@@ -1,0 +1,102 @@
+﻿/* Basis: transparant canvas van 1920x1080 voor OBS, plus status en testknoppen */
+:root {
+  /* Accentkleur van webcam, chat en alerts (huidskleur van je druid) */
+  --accent: #29ffb9;
+  --accent-rgb: 41, 255, 185;
+  --accent2: #8fffdc; /* lichtere tint voor verlopen */
+  --bg: rgba(24, 24, 26, 0.78);
+  --bg2: rgba(50, 51, 53, 0.7);
+  --line: rgba(255, 255, 255, 0.08);
+  --txt: #e4e9f2;
+  --mut: #8d919a;
+}
+
+html,
+body {
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  font-family: Manrope, sans-serif;
+  color: var(--txt);
+}
+
+/* Preview (?preview): nep-achtergrond en testknoppen, nooit in OBS gebruiken */
+body.preview {
+  background: radial-gradient(ellipse at 60% 40%, #2c3b2a, #121512 70%), #111;
+}
+
+body.preview::after {
+  content: "GAMEPLAY AREA";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  font: 700 28px "Chakra Petch";
+  letter-spacing: 0.5em;
+  color: rgba(255, 255, 255, 0.08);
+}
+
+/* Verbindingsstatus: alleen zichtbaar bij problemen, in preview, of kort na het opstarten */
+.status {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  margin: 0;
+  font: 600 22px Manrope, sans-serif;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.status.show {
+  opacity: 1;
+}
+
+.status.error {
+  color: #ff6b6b;
+}
+
+/* Testknoppen (alleen preview) */
+.ctl {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  max-width: 760px;
+  display: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+body.preview .ctl {
+  display: flex;
+}
+
+.ctl button {
+  font: 700 13px Manrope;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  color: var(--txt);
+  cursor: pointer;
+}
+
+.ctl button:hover,
+.ctl button.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ctl kbd {
+  margin-right: 6px;
+  color: var(--mut);
+}
