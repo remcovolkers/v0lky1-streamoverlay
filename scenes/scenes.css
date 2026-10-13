@@ -445,3 +445,49 @@ body.debug .zone {
   color: #fff;
   margin-top: 4px;
 }
+
+/* ---------- ending: webcam in de cirkel ----------
+   De pagina krijgt een rond gat zodat de webcam daaronder in OBS doorschijnt.
+   Cirkel: middelpunt (1200, 270), buitendiameter 380 px, ring van 3 px.
+   Wijzig je iets aan de maat of positie, pas dan ook de mask hieronder aan. */
+html.ending,
+html.ending body {
+  background: transparent;
+}
+
+.ending .bg {
+  -webkit-mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
+  mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
+}
+
+.ending .stage {
+  justify-content: flex-start;
+  padding-top: 428px; /* ruimte voor de cirkel (20 + 380 + 28) */
+}
+
+.ending .logo-wrap {
+  position: absolute;
+  left: calc(50% - 190px);
+  top: 20px;
+  width: 380px;
+  height: 380px;
+  margin: 0;
+}
+
+.ending .logo-wrap .disc {
+  display: none; /* geen donkere schijf: daar komt de webcam */
+}
+
+/* ?debug: vulling en label zodat je de opening ziet */
+html.ending body.debug .logo-wrap::after {
+  content: "WEBCAM";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  font: 700 14px Manrope;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.5);
+}
