@@ -1,17 +1,13 @@
 /* Layouts: de standaard (WoW) heeft de chat linksonder. Andere layouts kies je met ?layout=... */
 
-/* ?layout=cam: chat rechts naast de webcam, voor games waar de chat linksonder in de weg staat.
-   Het webcamframe loopt van x 12 tot 436 en van y 12 tot 261 (inclusief ring). */
+/* ?layout=cam: chat onder de webcam, voor games waar de chat linksonder in de weg staat.
+   Van boven naar onder: webcamframe (x 12-436, y 12-261), label, now playing (y 298-352), chat. */
 body.layout-cam .chat {
-  --ch: 247px; /* 249 min de rand van 1 px boven en onder */
-  left: 452px;
-  top: 12px;
+  --cw: 422px; /* 424 inclusief rand: even breed als het webcamframe */
+  --ch: 340px;
+  left: 12px;
+  top: 368px;
   bottom: auto;
   /* Doorzichtig, voor als de chat toch over iets in de game valt */
   background: rgba(24, 24, 26, 0.45);
-}
-
-/* De alert zou anders over de chat vallen (die loopt tot y 261), dus iets lager */
-body.layout-cam .alert {
-  top: 290px;
 }
