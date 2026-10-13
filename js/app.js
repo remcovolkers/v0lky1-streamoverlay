@@ -12,6 +12,9 @@ const params = new URLSearchParams(location.search);
 const PREVIEW = params.has("preview");
 const CONNECT = !PREVIEW || params.has("live");
 document.body.classList.toggle("preview", PREVIEW);
+// ?layout=cam zet de chat naast de webcam (zie css/layouts.css)
+const layout = params.get("layout");
+if (layout) document.body.classList.add(`layout-${layout}`);
 
 const statusEl = document.getElementById("status");
 
