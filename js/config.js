@@ -26,7 +26,7 @@ export const CONFIG = {
   tts: {
     language: "en", // taalcode van de stem, bijvoorbeeld "nl" of "en"
     maxChars: 200,
-    volume: 0.5,
+    volume: 0.75,
   },
 
   // auth.html staat naast index.html, ook op GitHub Pages in een submap.
