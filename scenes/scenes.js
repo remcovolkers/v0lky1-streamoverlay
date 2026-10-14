@@ -12,7 +12,7 @@ import { TwitchHub } from "../js/hub.js";
 import { addChatMessage, addSystemLine } from "../js/chat.js";
 import { startViewerCount } from "../js/viewers.js";
 
-const DEFAULT_MINUTES = 5;
+const DEFAULT_MINUTES = 10;
 const TICK_MS = 250;
 
 const params = new URLSearchParams(location.search);
