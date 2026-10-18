@@ -73,6 +73,15 @@ body.preview .cam {
   animation: lbl-blink 1.6s infinite;
 }
 
+/* Logo-badge: hangt over de rechterbovenhoek van het frame */
+.cam .badge {
+  position: absolute;
+  right: -34px;
+  top: -22px;
+  height: 100px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px rgba(var(--accent-rgb), 0.5));
+}
+
 @keyframes ring-spin {
   to {
     --a: 360deg;
