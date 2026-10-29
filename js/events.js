@@ -12,7 +12,7 @@ function playChatSound() {
   const { chat } = sounds;
   if (!chat || Date.now() - lastChatSound < chat.cooldownMs) return;
   lastChatSound = Date.now();
-  playFile(chat.file, chat.volume);
+  playFile(chat.file, chat.volume, { background: true });
 }
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;

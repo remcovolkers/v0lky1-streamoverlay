@@ -4,6 +4,8 @@ import { TwitchHub } from "./hub.js";
 import { bindEvents } from "./events.js";
 import { startNowPlaying } from "./nowplaying.js";
 import { startViewerCount } from "./viewers.js";
+import { initAudio } from "./audio.js";
+import { CONFIG } from "./config.js";
 
 // ?preview toont een nep-achtergrond en testknoppen. Gebruik dat nooit in OBS.
 // Preview maakt standaard geen Twitch-verbinding, zodat OBS de enige verbinding heeft.
@@ -72,6 +74,7 @@ function startTwitch(session) {
 }
 
 async function init() {
+  initAudio(Object.values(CONFIG.sounds).map((sound) => sound.file)); // geluiden alvast laden, uitvoer wakker houden
   if (PREVIEW) await import("./debug.js");
   if (!CONNECT) return setStatus("Preview: niet verbonden met Twitch");
 

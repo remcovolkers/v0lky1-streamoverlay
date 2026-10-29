@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { playFile } from "./audio.js";
+import { playExternal } from "./audio.js";
 
 // Onofficiële Google Translate TTS: geeft een mp3 terug, zonder account. Kan zonder
 // waarschuwing veranderen of stoppen; dan valt speak() terug op de browserstem.
@@ -37,7 +37,7 @@ export async function speak(text) {
   const url = new URL(GOOGLE_TTS_URL);
   url.search = new URLSearchParams({ ie: "UTF-8", client: "tw-ob", tl: CONFIG.tts.language, q: clean });
 
-  const ok = await playFile(url.href, CONFIG.tts.volume);
+  const ok = await playExternal(url.href, CONFIG.tts.volume);
   if (!ok) {
     console.warn("[tts] online stem mislukt, probeer de browserstem");
     await speakWithBrowser(clean);

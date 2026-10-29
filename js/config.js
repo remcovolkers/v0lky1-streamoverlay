@@ -19,7 +19,7 @@ export const CONFIG = {
     follow: { file: "assets/audio/follow.wav", volume: 0.7 },
     raid: { file: "assets/audio/raid.wav", volume: 0.8 },
     gift: { file: "assets/audio/gift.wav", volume: 0.8 },
-    chat: { file: "assets/audio/chat.wav", volume: 0.4, cooldownMs: 100 }, // cooldown: minimale tijd tussen twee chatgeluiden
+    chat: { file: "assets/audio/chat.wav", volume: 0.4, cooldownMs: 500 }, // cooldown: minimale tijd tussen twee chatgeluiden
   },
 
   // Tekst-naar-spraak voor bits en rewards
