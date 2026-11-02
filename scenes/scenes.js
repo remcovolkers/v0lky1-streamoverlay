@@ -1,7 +1,8 @@
 // Gedeeld script voor de scenes (starting-soon, brb, ending).
 //
 // Opties via de URL, bijvoorbeeld scenes/starting-soon.html?min=10&title=Almost%20there
-//   min       aantal minuten voor de aftelklok (alleen starting-soon, standaard 5)
+//   min       aantal minuten voor de aftelklok (alleen starting-soon, standaard 10); een duur die je
+//             zelf via het invoerveld onder de klok instelt gaat hier boven
 //   title     vervangt de hoofdtitel
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
@@ -27,16 +28,61 @@ for (const id of ["title", "subtitle"]) {
 
 // Aftelklok: telt vanaf het laden van de pagina. In OBS betekent dat: zet bij de bron
 // "Browser verversen wanneer scène actief wordt" aan, dan start hij elke keer opnieuw.
+// De duur is in te stellen via het invoerveld onder de klok (verschijnt als je er met de muis
+// overheen gaat; in OBS: rechtermuisknop op de bron > Interact). De laatst ingevoerde duur wordt
+// onthouden en geldt bij elke volgende start; zonder onthouden duur gelden ?min= en daarna 10.
 const countdownEl = document.getElementById("countdown");
 if (countdownEl) {
-  const minutes = Number(params.get("min"));
-  const end = Date.now() + (minutes > 0 ? minutes : DEFAULT_MINUTES) * 60_000;
+  const STORAGE_KEY = "startingSoonSeconds";
+  const form = document.getElementById("timer-set");
+  const input = document.getElementById("timer-input");
+
+  const loadSeconds = () => {
+    try {
+      const saved = Number(localStorage.getItem(STORAGE_KEY));
+      if (saved > 0) return saved;
+    } catch {}
+    const minutes = Number(params.get("min"));
+    return Math.round((minutes > 0 ? minutes : DEFAULT_MINUTES) * 60);
+  };
+
+  // "10" = 10 minuten, "2:30" = 2 minuten en 30 seconden, "1,5" = anderhalve minuut
+  const parseDuration = (text) => {
+    const value = text.trim().replace(",", ".");
+    const clock = value.match(/^(\d+):([0-5]?\d)$/);
+    const seconds = clock ? Number(clock[1]) * 60 + Number(clock[2]) : Number(value) * 60;
+    return seconds > 0 && Number.isFinite(seconds) ? Math.round(seconds) : 0;
+  };
+
+  let end;
+  const start = (seconds) => {
+    end = Date.now() + seconds * 1000;
+    tick();
+  };
 
   const tick = () => {
     const left = Math.max(0, Math.ceil((end - Date.now()) / 1000));
     countdownEl.textContent = `${pad(Math.floor(left / 60))}:${pad(left % 60)}`;
   };
-  tick();
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const seconds = parseDuration(input.value);
+    if (!seconds) {
+      form.classList.add("invalid");
+      return;
+    }
+    form.classList.remove("invalid");
+    try {
+      localStorage.setItem(STORAGE_KEY, String(seconds));
+    } catch {}
+    input.value = "";
+    input.blur();
+    start(seconds);
+  });
+  input.addEventListener("input", () => form.classList.remove("invalid"));
+
+  start(loadSeconds());
   setInterval(tick, TICK_MS);
 }
 

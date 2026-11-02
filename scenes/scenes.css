@@ -341,6 +341,52 @@ body.debug .zone {
   }
 }
 
+/* tijdinvoer onder de klok: onzichtbaar tot hover/focus, dus nooit in beeld op de stream */
+.timer {
+  position: relative;
+}
+
+#timer-set {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.timer:hover #timer-set,
+#timer-set:focus-within {
+  opacity: 1;
+}
+
+#timer-set input,
+#timer-set button {
+  font: 600 18px Manrope, sans-serif;
+  color: var(--text);
+  background: rgba(24, 24, 26, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+
+#timer-set input {
+  width: 300px;
+  outline: none;
+}
+
+#timer-set button {
+  color: var(--accent);
+  cursor: pointer;
+}
+
+#timer-set.invalid input {
+  border-color: #ff5d6c;
+}
+
 #countdown {
   display: block;
   padding: 14px 48px;
