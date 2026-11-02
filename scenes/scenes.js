@@ -1,8 +1,10 @@
 // Gedeeld script voor de scenes (starting-soon, brb, ending).
 //
-// Opties via de URL, bijvoorbeeld scenes/starting-soon.html?min=10&title=Almost%20there
-//   min       aantal minuten voor de aftelklok (alleen starting-soon, standaard 10); een duur die je
-//             zelf via het invoerveld onder de klok instelt gaat hier boven
+// Opties via de URL, bijvoorbeeld scenes/starting-soon.html?at=20:15&title=Almost%20there
+//   at        starttijd van de stream (alleen starting-soon, standaard 19:45): de klok telt hier naartoe
+//   min       als de starttijd al geweest is (of bereikt wordt) is de stream te laat: de scène wordt
+//             boos en de klok telt dit aantal minuten af (standaard 10)
+//   late      forceert de boze scène, om hem te bekijken
 //   title     vervangt de hoofdtitel
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
@@ -13,6 +15,7 @@ import { TwitchHub } from "../js/hub.js";
 import { addChatMessage, addSystemLine } from "../js/chat.js";
 import { startViewerCount } from "../js/viewers.js";
 
+const DEFAULT_START = "19:45";
 const DEFAULT_MINUTES = 10;
 const TICK_MS = 250;
 
@@ -26,63 +29,53 @@ for (const id of ["title", "subtitle"]) {
   if (text) document.getElementById(id).textContent = text;
 }
 
-// Aftelklok: telt vanaf het laden van de pagina. In OBS betekent dat: zet bij de bron
-// "Browser verversen wanneer scène actief wordt" aan, dan start hij elke keer opnieuw.
-// De duur is in te stellen via het invoerveld onder de klok (verschijnt als je er met de muis
-// overheen gaat; in OBS: rechtermuisknop op de bron > Interact). De laatst ingevoerde duur wordt
-// onthouden en geldt bij elke volgende start; zonder onthouden duur gelden ?min= en daarna 10.
+// Aftelklok naar de starttijd (?at=, standaard 19:45). Is die al geweest als de pagina laadt, dan
+// is de streamer te laat: de scène wordt boos en de klok telt ?min= minuten af vanaf het laden.
+// In OBS: zet bij de bron "Browser verversen wanneer scène actief wordt" aan, dan klopt dit elke keer.
 const countdownEl = document.getElementById("countdown");
+let late = false;
+
+function parseClock(text) {
+  const match = /^(\d{1,2})[:.]?(\d{2})$/.exec((text ?? "").trim());
+  if (!match || Number(match[1]) > 23 || Number(match[2]) > 59) return null;
+  return [Number(match[1]), Number(match[2])];
+}
+
+// Boze scène: kleuren, tekst en beweging komen uit body.late (scenes.css)
+function enterLate() {
+  late = true;
+  document.body.classList.add("late");
+  const texts = {
+    title: "He's late!",
+    subtitle: "Grab your pitchforks, the druid is not here yet",
+  };
+  for (const id of Object.keys(texts)) {
+    if (!params.get(id)) document.getElementById(id).textContent = texts[id];
+  }
+  document.querySelector(".kicker").textContent = "The druid is late";
+}
+
 if (countdownEl) {
-  const STORAGE_KEY = "startingSoonSeconds";
-  const form = document.getElementById("timer-set");
-  const input = document.getElementById("timer-input");
+  const [hours, minutes] = parseClock(params.get("at")) ?? parseClock(DEFAULT_START);
+  const target = new Date();
+  target.setHours(hours, minutes, 0, 0);
 
-  const loadSeconds = () => {
-    try {
-      const saved = Number(localStorage.getItem(STORAGE_KEY));
-      if (saved > 0) return saved;
-    } catch {}
-    const minutes = Number(params.get("min"));
-    return Math.round((minutes > 0 ? minutes : DEFAULT_MINUTES) * 60);
-  };
-
-  // "10" = 10 minuten, "2:30" = 2 minuten en 30 seconden, "1,5" = anderhalve minuut
-  const parseDuration = (text) => {
-    const value = text.trim().replace(",", ".");
-    const clock = value.match(/^(\d+):([0-5]?\d)$/);
-    const seconds = clock ? Number(clock[1]) * 60 + Number(clock[2]) : Number(value) * 60;
-    return seconds > 0 && Number.isFinite(seconds) ? Math.round(seconds) : 0;
-  };
-
-  let end;
-  const start = (seconds) => {
-    end = Date.now() + seconds * 1000;
-    tick();
-  };
+  if (params.has("late") || Date.now() >= target.getTime()) enterLate();
+  const fallbackMinutes = Number(params.get("min"));
+  const fallbackMs = (fallbackMinutes > 0 ? fallbackMinutes : DEFAULT_MINUTES) * 60_000;
+  const end = late ? Date.now() + fallbackMs : target.getTime();
 
   const tick = () => {
     const left = Math.max(0, Math.ceil((end - Date.now()) / 1000));
-    countdownEl.textContent = `${pad(Math.floor(left / 60))}:${pad(left % 60)}`;
-  };
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const seconds = parseDuration(input.value);
-    if (!seconds) {
-      form.classList.add("invalid");
-      return;
+    const h = Math.floor(left / 3600);
+    const clock = `${pad(Math.floor(left / 60) % 60)}:${pad(left % 60)}`;
+    countdownEl.textContent = h ? `${h}:${clock}` : clock;
+    if (!left && !late) {
+      enterLate();
+      angryChat();
     }
-    form.classList.remove("invalid");
-    try {
-      localStorage.setItem(STORAGE_KEY, String(seconds));
-    } catch {}
-    input.value = "";
-    input.blur();
-    start(seconds);
-  });
-  input.addEventListener("input", () => form.classList.remove("invalid"));
-
-  start(loadSeconds());
+  };
+  tick();
   setInterval(tick, TICK_MS);
 }
 
@@ -111,6 +104,30 @@ const FAKE_LINES = [
 ];
 const FAKE_USERS = ["MoonkinMike", "BearFormBrad", "Catweaver", "ShredTheTank", "Rakeqween", "LeafyLarry"];
 
+const ANGRY_LINES = [
+  "WHERE IS HE", "its past 19:45 and no druid", "grab the pitchforks", "THE DRUID IS LATE",
+  "my cat is angrier than me rn", "he forgot, didnt he", "pitchforks out chat", "ONE JOB",
+];
+
+// Boze chat: de scène is te laat, dus de chat laat dat de streamer weten
+function angryChat(instant = false) {
+  if (!document.getElementById("chat")) return;
+  ANGRY_LINES.forEach((text, i) => {
+    const say = () => addFakeMessage(text, i);
+    if (instant) say();
+    else setTimeout(say, i * 900);
+  });
+}
+
+function addFakeMessage(text, i) {
+  addChatMessage({
+    chatter_user_name: FAKE_USERS[i % FAKE_USERS.length],
+    color: "",
+    message_type: "text",
+    message: { text, fragments: [{ type: "text", text }] },
+  });
+}
+
 async function startChat() {
   const result = await getSession();
   if (result.error) {
@@ -131,14 +148,9 @@ async function startChat() {
 if (params.get("chat") === "off") {
   document.getElementById("chat").remove();
 } else if (params.has("debug")) {
-  FAKE_LINES.forEach((text, i) =>
-    addChatMessage({
-      chatter_user_name: FAKE_USERS[i % FAKE_USERS.length],
-      color: "",
-      message_type: "text",
-      message: { text, fragments: [{ type: "text", text }] },
-    }),
-  );
+  if (late) angryChat(true);
+  else FAKE_LINES.forEach(addFakeMessage);
 } else {
   startChat();
+  if (late) angryChat();
 }

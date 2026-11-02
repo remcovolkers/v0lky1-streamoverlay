@@ -341,50 +341,110 @@ body.debug .zone {
   }
 }
 
-/* tijdinvoer onder de klok: onzichtbaar tot hover/focus, dus nooit in beeld op de stream */
-.timer {
-  position: relative;
+/* ---------- te laat: boze scène (body.late wordt gezet door scenes.js) ---------- */
+body.late {
+  --accent: #ff3b3b;
+  --accent-rgb: 255, 59, 59;
+  --accent-light: #ff9a8a;
+  --line: rgba(var(--accent-rgb), 0.5);
+  --glow: 0 0 18px rgba(var(--accent-rgb), 0.22);
 }
 
-#timer-set {
+body.late .bg {
+  background: radial-gradient(1100px 800px at 62% 45%, #2a0f0f 0%, #190b0b 45%, #0c0707 100%);
+}
+
+body.late .bg .aura {
+  animation: rage 1.2s ease-in-out infinite;
+}
+
+/* de leeuw wordt rood en schudt van woede */
+body.late .logo-wrap img {
+  filter: hue-rotate(222deg) saturate(1.4) drop-shadow(0 0 22px rgba(var(--accent-rgb), 0.7));
+  animation: shake 0.35s linear infinite;
+}
+
+body.late .logo-wrap .ring {
+  animation-duration: 1.2s;
+}
+
+body.late #title,
+body.late #countdown {
+  animation: shake 0.5s linear infinite;
+}
+
+body.late #subtitle {
+  color: var(--accent-light);
+}
+
+/* boze chat */
+body.late .chat {
+  animation: shake 0.6s linear infinite;
+}
+
+body.late .chat .msgs {
+  color: #ffd7d2;
+}
+
+/* hooivorken aan weerszijden van de leeuw */
+.fork {
+  display: none;
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 12px;
-  display: flex;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.2s;
+  top: 6px;
+  width: 52px;
+  height: 230px;
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.timer:hover #timer-set,
-#timer-set:focus-within {
-  opacity: 1;
+.fork .wood {
+  stroke: #9a6a36;
 }
 
-#timer-set input,
-#timer-set button {
-  font: 600 18px Manrope, sans-serif;
-  color: var(--text);
-  background: rgba(24, 24, 26, 0.92);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 16px;
+.fork .iron {
+  stroke: #d5d9e0;
 }
 
-#timer-set input {
-  width: 300px;
-  outline: none;
+.fork.l {
+  left: -120px;
+  transform: rotate(-16deg);
 }
 
-#timer-set button {
-  color: var(--accent);
-  cursor: pointer;
+.fork.r {
+  right: -120px;
+  transform: rotate(16deg);
 }
 
-#timer-set.invalid input {
-  border-color: #ff5d6c;
+body.late .fork {
+  display: block;
+  animation: jab 0.9s ease-in-out infinite;
+}
+
+body.late .fork.r {
+  animation-delay: -0.45s;
+}
+
+@keyframes shake {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -2px 1px; }
+  40% { translate: 2px -1px; }
+  60% { translate: -1px -2px; }
+  80% { translate: 1px 2px; }
+}
+
+@keyframes rage {
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+@keyframes jab {
+  50% {
+    translate: 0 -14px;
+  }
 }
 
 #countdown {
