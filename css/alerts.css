@@ -1,4 +1,4 @@
-﻿/* Alerts: kaart met animaties.
+/* Alerts: kaart met animaties.
    Stijlen: .hype (accentkleur, krabbels + vonken) en .calm (rustig, voor follows en rewards) */
 .alert {
   position: absolute;
@@ -16,7 +16,7 @@
   gap: 22px;
   padding: 22px 28px 22px 22px;
   background: var(--bg);
-  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border: 1px solid rgba(var(--edge-rgb), 0.35);
   border-radius: 22px;
   backdrop-filter: blur(18px);
   box-shadow:
@@ -45,7 +45,7 @@
   width: 78px;
   height: 92px;
   object-fit: contain;
-  filter: drop-shadow(0 0 16px rgba(var(--accent-rgb), 0.5));
+  filter: drop-shadow(0 0 16px rgba(var(--logo-glow-rgb), 0.5));
 }
 
 .card .k {
@@ -56,10 +56,10 @@
 }
 
 .card .nm {
-  font: 700 42px/1.05 "Chakra Petch";
+  font: 700 42px/1.05 var(--font-display);
   margin: 4px 0;
   overflow-wrap: anywhere;
-  background: linear-gradient(90deg, #fff, var(--accent2));
+  background: linear-gradient(90deg, var(--bright), var(--accent-light));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -88,7 +88,7 @@
 
 .card.calm .nm {
   background: none;
-  color: #fff;
+  color: var(--bright);
 }
 
 /* Krabbels (hype) */

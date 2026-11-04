@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>v0lky1 Stream Overlay</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <style>
+    /* Keuzepagina: de overlays zelf staan per spel in retail/ en forever/ */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #0e1411;
+      color: #e6eee9;
+      font-family: Manrope, sans-serif;
+    }
+    main { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 32px; }
+    section {
+      width: 320px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    section.retail { border-color: rgba(41, 255, 185, 0.5); }
+    section.forever { border-color: rgba(86, 184, 134, 0.5); }
+    h1 { margin: 0 0 4px; font: 700 26px "Chakra Petch", sans-serif; text-transform: uppercase; }
+    p { margin: 0 0 16px; color: #8a9a91; font-size: 14px; }
+    a { display: block; padding: 8px 0; color: inherit; text-decoration: none; font-weight: 700; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    a:hover { color: #56b886; }
+    .retail a:hover { color: #29ffb9; }
+    small { color: #8a9a91; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="retail">
+      <h1>Retail</h1>
+      <p>Neongroene layout voor WoW Retail</p>
+      <a href="retail/index.html?preview">Overlay <small>(preview)</small></a>
+      <a href="retail/scenes/starting-soon.html?debug">Starting soon</a>
+      <a href="retail/scenes/brb.html?debug">Be right back</a>
+      <a href="retail/scenes/ending.html?debug">Ending</a>
+    </section>
+    <section class="forever">
+      <h1>WoW Forever</h1>
+      <p>Bosgroene layout voor Classic</p>
+      <a href="forever/index.html?preview">Overlay <small>(preview)</small></a>
+      <a href="forever/scenes/starting-soon.html?debug">Starting soon</a>
+      <a href="forever/scenes/brb.html?debug">Be right back</a>
+      <a href="forever/scenes/ending.html?debug">Ending</a>
+    </section>
+  </main>
+</body>
+</html>

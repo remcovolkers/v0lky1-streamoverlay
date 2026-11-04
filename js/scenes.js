@@ -1,6 +1,6 @@
-// Gedeeld script voor de scenes (starting-soon, brb, ending).
+// Gedeeld script voor de scenes (starting-soon, brb, ending) van alle spellen.
 //
-// Opties via de URL, bijvoorbeeld scenes/starting-soon.html?at=20:15&title=Almost%20there
+// Opties via de URL, bijvoorbeeld retail/scenes/starting-soon.html?at=20:15&title=Almost%20there
 //   at        starttijd van de stream (alleen starting-soon, standaard 19:45): de klok telt hier naartoe
 //   min       als de starttijd al geweest is (of bereikt wordt) is de stream te laat: de scène wordt
 //             boos en de klok telt dit aantal minuten af (standaard 10)
@@ -9,11 +9,11 @@
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
 //   debug     toont de gereserveerde zones en nepberichten in de chat, zonder Twitch-verbinding
-import { watchNowPlaying } from "../js/ytm.js";
-import { getSession } from "../js/auth.js";
-import { TwitchHub } from "../js/hub.js";
-import { addChatMessage, addSystemLine } from "../js/chat.js";
-import { startViewerCount } from "../js/viewers.js";
+import { watchNowPlaying } from "./ytm.js";
+import { getSession } from "./auth.js";
+import { TwitchHub } from "./hub.js";
+import { addChatMessage, addSystemLine } from "./chat.js";
+import { startViewerCount } from "./viewers.js";
 
 const DEFAULT_START = "19:45";
 const DEFAULT_MINUTES = 10;

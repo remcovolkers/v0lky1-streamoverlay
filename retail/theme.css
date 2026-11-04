@@ -1,0 +1,39 @@
+/* Thema Retail: het neongroene thema van de huidige WoW-layout.
+   Alle kleuren van overlay (index.html) en scenes komen uit deze tokens; de vorm staat in ../css. */
+:root {
+  /* Accent: webcamframe, chat, alerts, titels */
+  --accent: #29ffb9;
+  --accent-rgb: 41, 255, 185;
+  --accent-light: #8fffdc; /* lichtere tint (titelverloop, highlights) */
+  --edge-rgb: 41, 255, 185; /* randen van panelen en kaarten */
+  --bright: #fff; /* titels, labels en lichtpunten */
+
+  /* Tweede kleur voor sfeer: de hoek-gloed in de scenes */
+  --moon-rgb: 41, 255, 185;
+  /* Gloed om het logo */
+  --logo-glow-rgb: 41, 255, 185;
+  --spark-extra: #fff; /* derde vonkkleur bij hype-alerts */
+
+  /* Panelen (chat, webcamlabel, now playing) en tekst */
+  --panel-rgb: 24, 24, 26;
+  --panel: rgb(var(--panel-rgb));
+  --frame: #1c1c1f;
+  --text: #e4e9f2;
+  --muted: #8d919a;
+  --chat-text: #eefaf6;
+
+  /* Kleuren voor chatnamen zonder (of met een te donkere) Twitch-kleur */
+  --name-colors: #29ffb9, #6dffd0, #8fffdc, #4dffc4, #b3ffe9, #20e8a6, #7affd4, #a0ffe2;
+
+  /* Lettertype van titels, aftelklok en namen in alerts */
+  --font-display: "Chakra Petch", sans-serif;
+
+  /* Achtergrond van de scenes (van binnen naar buiten) */
+  --scene-base: #0b0f0e;
+  --scene-bg-1: #10221d;
+  --scene-bg-2: #0c1513;
+  --scene-bg-3: #090c0c;
+
+  /* Het logo wordt rood in de "te laat"-scène */
+  --late-logo-filter: hue-rotate(222deg) saturate(1.4);
+}

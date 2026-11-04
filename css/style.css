@@ -1,14 +1,9 @@
-﻿/* Basis: transparant canvas van 1920x1080 voor OBS, plus status en testknoppen */
+/* Basis: transparant canvas van 1920x1080 voor OBS, plus status en testknoppen.
+   De kleuren (accent, paneel, tekst) komen uit theme.css in de map van het spel (retail/, forever/). */
 :root {
-  /* Accentkleur van webcam, chat en alerts (huidskleur van je druid) */
-  --accent: #29ffb9;
-  --accent-rgb: 41, 255, 185;
-  --accent2: #8fffdc; /* lichtere tint voor verlopen */
-  --bg: rgba(24, 24, 26, 0.78);
+  --bg: rgba(var(--panel-rgb), 0.78);
   --bg2: rgba(50, 51, 53, 0.7);
   --line: rgba(255, 255, 255, 0.08);
-  --txt: #e4e9f2;
-  --mut: #8d919a;
 }
 
 html,
@@ -23,7 +18,7 @@ body {
   height: 1080px;
   position: relative;
   font-family: Manrope, sans-serif;
-  color: var(--txt);
+  color: var(--text);
 }
 
 /* Preview (?preview): nep-achtergrond en testknoppen, nooit in OBS gebruiken */
@@ -37,7 +32,7 @@ body.preview::after {
   left: 50%;
   top: 46%;
   transform: translate(-50%, -50%);
-  font: 700 28px "Chakra Petch";
+  font: 700 28px var(--font-display);
   letter-spacing: 0.5em;
   color: rgba(255, 255, 255, 0.08);
 }
@@ -86,7 +81,7 @@ body.preview .ctl {
   border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--bg2);
-  color: var(--txt);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -98,5 +93,5 @@ body.preview .ctl {
 
 .ctl kbd {
   margin-right: 6px;
-  color: var(--mut);
+  color: var(--muted);
 }

@@ -1,0 +1,185 @@
+/* Thema WoW Forever (Classic): dezelfde layout als retail, maar warmer en klassieker: bosgroen in plaats
+   van neongroen, randen van oud brons/hout, een serif-lettertype en minder gloed.
+   De kleuren komen uit het nieuwe logo (manen, paars maanlicht). De basisvorm staat in ../css;
+   dit bestand wordt als laatste geladen en past de vorm hieronder aan. */
+:root {
+  /* Accent: webcamframe, chat, alerts, titels (bosgroen) */
+  --accent: #62b27a;
+  --accent-rgb: 98, 178, 122;
+  --accent-light: #c5e5c0; /* lichtere tint (titelverloop, highlights) */
+  --edge-rgb: 158, 134, 84; /* randen van panelen en kaarten: oud brons */
+  --bright: #f1ead6; /* titels, labels en lichtpunten: warm perkament in plaats van wit */
+
+  /* Tweede kleur: maanlicht uit het logo (hoek-gloed in de scenes) */
+  --moon-rgb: 164, 112, 255;
+  /* Gloed om het logo */
+  --logo-glow-rgb: 164, 112, 255;
+  --spark-extra: #d9c4ff; /* derde vonkkleur bij hype-alerts */
+
+  /* Panelen (chat, webcamlabel, now playing) en tekst: donker bos/hout */
+  --panel-rgb: 21, 26, 18;
+  --panel: rgb(var(--panel-rgb));
+  --frame: #1d2318;
+  --text: #e6eee9;
+  --muted: #8d9a8a;
+  --chat-text: #e8f2ec;
+
+  /* Kleuren voor chatnamen zonder (of met een te donkere) Twitch-kleur: bosgroen met wat maanlicht */
+  --name-colors: #62b27a, #86cc9a, #a9dcb4, #74c28c, #b79cff, #9d84ea, #90d6a6, #c9b8ff;
+
+  /* Lettertype van titels, aftelklok en namen in alerts */
+  --font-display: Cinzel, Georgia, serif;
+
+  /* Achtergrond van de scenes (van binnen naar buiten): diep bos */
+  --scene-base: #090e0a;
+  --scene-bg-1: #15291a;
+  --scene-bg-2: #0d190f;
+  --scene-bg-3: #070b08;
+
+  /* Het logo wordt rood in de "te laat"-scène (alles eerst grijs, dan roodbruin getint) */
+  --late-logo-filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(4);
+
+  /* Zacht schaduwlicht in plaats van neongloed (scenes) */
+  --glow: 0 4px 14px rgba(0, 0, 0, 0.45);
+
+  /* Fijne houtnerf over panelen */
+  --grain: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 45%);
+}
+
+/* ================= Vorm: minder modern, meer hout en bos ================= */
+
+/* Labels en kopjes in het serif-lettertype. De naam v0lky1 (webcamlabel, pill, twitch-url) blijft in
+   Manrope: in Cinzel lijkt de 1 op een I. */
+.tab,
+.kicker,
+.np-k,
+#nowplaying .lab,
+.thanks-row .k,
+.card .k {
+  font-family: var(--font-display);
+}
+
+.thanks-row .v {
+  font-family: Manrope, sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+}
+
+/* Panelen: kleine hoeken, dubbele rand (donkere lijn + brons), houtnerf, donkere schaduw */
+.chat,
+.np {
+  border-radius: 6px;
+  border-width: 2px;
+  background-image: var(--grain);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 4px rgba(var(--edge-rgb), 0.12),
+    0 10px 26px rgba(0, 0, 0, 0.5);
+}
+
+.chat .side {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.cam .lbl,
+.pill {
+  border-radius: 3px;
+  border-width: 2px;
+  background-image: var(--grain);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.card {
+  border-radius: 8px;
+  border-width: 2px;
+  backdrop-filter: none;
+  background-image: var(--grain);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 5px rgba(var(--edge-rgb), 0.1),
+    0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Alerts: de kaart is dicht (geen glas) */
+.alert .card {
+  background-color: rgba(var(--panel-rgb), 0.94);
+}
+
+/* Scenes: geen terugkerende lichtflits over de kaarten */
+.card::after {
+  display: none;
+}
+
+/* Webcamframe: een brons/houten lijst in plaats van de draaiende neonring */
+.cam .ring {
+  border-radius: 6px;
+  animation: none;
+  background:
+    linear-gradient(135deg, rgb(var(--edge-rgb)) 0%, rgba(var(--edge-rgb), 0.3) 38%, rgb(var(--edge-rgb)) 62%, rgba(var(--edge-rgb), 0.4) 100%),
+    linear-gradient(var(--frame), var(--frame));
+}
+
+.cam .ring.b {
+  display: none;
+}
+
+.cam .ring.in {
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Logomedaillon in de scenes: ook een bronzen rand; alleen als hij te laat is draait de ring woedend */
+.logo-wrap .ring {
+  animation: none;
+  background: linear-gradient(135deg, rgb(var(--edge-rgb)) 0%, rgba(var(--edge-rgb), 0.3) 38%, rgb(var(--edge-rgb)) 62%, rgba(var(--edge-rgb), 0.4) 100%);
+}
+
+.logo-wrap .ring.b {
+  display: none;
+}
+
+body.late .logo-wrap .ring {
+  background: conic-gradient(from var(--a), transparent 0 60%, rgba(var(--accent-rgb), 0.35) 72%, var(--accent) 86%, var(--bright) 88%, var(--accent) 90%, transparent 92%);
+  animation: spin 1.2s linear infinite;
+}
+
+.logo-wrap .disc {
+  border-width: 2px;
+}
+
+/* Titels: kleiner (Cinzel is breed), met een harde schaduw in plaats van neongloed */
+#title {
+  font-size: 88px;
+  letter-spacing: 0.03em;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.5));
+}
+
+#subtitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+}
+
+#countdown {
+  font-size: 100px;
+  min-width: 5.4ch;
+  text-align: center;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.card .nm {
+  font-size: 36px;
+}
+
+/* Sfeer: bundels zonlicht door het bladerdak */
+.bg .canopy {
+  opacity: 0.9;
+  background:
+    repeating-linear-gradient(104deg, transparent 0 150px, rgba(var(--accent-rgb), 0.045) 150px 230px, transparent 230px 400px),
+    radial-gradient(600px 300px at 10% -5%, rgba(var(--accent-rgb), 0.07), transparent 70%),
+    radial-gradient(700px 360px at 95% 105%, rgba(var(--moon-rgb), 0.07), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent 75%);
+  mask-image: linear-gradient(180deg, #000, transparent 75%);
+}

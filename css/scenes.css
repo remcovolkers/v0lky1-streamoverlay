@@ -1,15 +1,9 @@
 /* ===== v0lky1 / Volkydruid scenes: gedeelde stijl ===== */
-/* Fonts komen uit ../css/fonts.css */
+/* Fonts komen uit fonts.css. De kleuren per spel (accent, achtergrond, paneel, tekst) staan in
+   theme.css in de map van het spel (retail/, forever/); hier staat alleen de vorm en beweging. */
 
 :root {
-  --accent: #29ffb9;
-  --accent-rgb: 41, 255, 185;
-  --accent-light: #8fffdc; /* lichtere tint (titelverloop, highlights) */
-  --panel: #18181a;
-  --frame: #1c1c1f;
-  --text: #e4e9f2;
-  --muted: #8d919a;
-  --line: rgba(var(--accent-rgb), 0.5);
+  --line: rgba(var(--edge-rgb), 0.5);
   --glow: 0 0 18px rgba(var(--accent-rgb), 0.22);
 }
 
@@ -30,7 +24,7 @@ body {
   width: 1920px;
   height: 1080px;
   overflow: hidden;
-  background: #0b0f0e;
+  background: var(--scene-base);
 }
 
 body {
@@ -44,7 +38,7 @@ body {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: radial-gradient(1100px 800px at 62% 45%, #10221d 0%, #0c1513 45%, #090c0c 100%);
+  background: radial-gradient(1100px 800px at 62% 45%, var(--scene-bg-1) 0%, var(--scene-bg-2) 45%, var(--scene-bg-3) 100%);
 }
 
 .bg .aura {
@@ -64,7 +58,7 @@ body {
   opacity: 0.5;
   background:
     radial-gradient(600px 300px at 10% -5%, rgba(var(--accent-rgb), 0.06), transparent 70%),
-    radial-gradient(700px 360px at 95% 105%, rgba(var(--accent-rgb), 0.07), transparent 70%);
+    radial-gradient(700px 360px at 95% 105%, rgba(var(--moon-rgb), 0.07), transparent 70%);
 }
 
 .leaves,
@@ -215,7 +209,7 @@ body.debug .zone {
   inset: 0;
   border-radius: 50%;
   padding: 3px;
-  background: conic-gradient(from var(--a), transparent 0 60%, rgba(var(--accent-rgb), 0.35) 72%, var(--accent) 86%, #fff 88%, var(--accent) 90%, transparent 92%);
+  background: conic-gradient(from var(--a), transparent 0 60%, rgba(var(--accent-rgb), 0.35) 72%, var(--accent) 86%, var(--bright) 88%, var(--accent) 90%, transparent 92%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -239,7 +233,7 @@ body.debug .zone {
 .logo-wrap img {
   position: relative;
   height: 200px;
-  filter: drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.45));
+  filter: drop-shadow(0 0 18px rgba(var(--logo-glow-rgb), 0.45));
   animation: bob 6s ease-in-out infinite;
 }
 
@@ -266,7 +260,7 @@ body.debug .zone {
   font: 800 11px Manrope;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--bright);
   box-shadow: var(--glow);
 }
 
@@ -293,10 +287,10 @@ body.debug .zone {
 }
 
 #title {
-  font: 700 112px/1 "Chakra Petch", sans-serif;
+  font: 700 112px/1 var(--font-display);
   letter-spacing: 0.01em;
   text-transform: uppercase;
-  background: linear-gradient(180deg, #fff 20%, var(--accent-light));
+  background: linear-gradient(180deg, var(--bright) 20%, var(--accent-light));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -313,7 +307,7 @@ body.debug .zone {
 .card {
   position: relative;
   overflow: hidden;
-  background: rgba(24, 24, 26, 0.82);
+  background: rgba(var(--panel-rgb), 0.82);
   border: 1px solid var(--line);
   border-radius: 22px;
   box-shadow: var(--glow);
@@ -346,7 +340,10 @@ body.late {
   --accent: #ff3b3b;
   --accent-rgb: 255, 59, 59;
   --accent-light: #ff9a8a;
-  --line: rgba(var(--accent-rgb), 0.5);
+  --moon-rgb: 255, 59, 59;
+  --edge-rgb: 255, 59, 59;
+  --logo-glow-rgb: 255, 59, 59;
+  --line: rgba(var(--edge-rgb), 0.5);
   --glow: 0 0 18px rgba(var(--accent-rgb), 0.22);
 }
 
@@ -360,7 +357,7 @@ body.late .bg .aura {
 
 /* de leeuw wordt rood en schudt van woede */
 body.late .logo-wrap img {
-  filter: hue-rotate(222deg) saturate(1.4) drop-shadow(0 0 22px rgba(var(--accent-rgb), 0.7));
+  filter: var(--late-logo-filter) drop-shadow(0 0 22px rgba(var(--accent-rgb), 0.7));
   animation: shake 0.35s linear infinite;
 }
 
@@ -450,8 +447,8 @@ body.late .fork.r {
 #countdown {
   display: block;
   padding: 14px 48px;
-  font: 700 120px/1 "Chakra Petch", sans-serif;
-  color: #fff;
+  font: 700 120px/1 var(--font-display);
+  color: var(--bright);
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
   text-shadow: 0 0 24px rgba(var(--accent-rgb), 0.35);
@@ -547,8 +544,8 @@ body.late .fork.r {
 }
 
 .thanks-row .v {
-  font: 700 26px "Chakra Petch";
-  color: #fff;
+  font: 700 26px var(--font-display);
+  color: var(--bright);
   margin-top: 4px;
 }
 

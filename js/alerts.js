@@ -1,8 +1,10 @@
 import { playFile } from "./audio.js";
 import { speak } from "./tts.js";
 
-const LOGO = "assets/images/logo.png";
-const SPARK_COLORS = ["#29ffb9", "#8fffdc", "#fff"];
+// Elk spel (retail/, forever/) heeft zijn eigen logo.png naast de index.html
+const LOGO = new URL("logo.png", location.href).href;
+// Vonkkleuren komen uit het thema (theme.css van het spel)
+const SPARK_COLORS = ["var(--accent)", "var(--accent-light)", "var(--spark-extra)"];
 const SPARK_COUNT = 28;
 const OUT_MS = 500; // duur van de uitfade-animatie
 const GAP_MS = 400; // pauze tussen twee alerts
