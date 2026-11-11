@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>v0lky1 - Lion loop</title>
+  <!--
+    Headbobbende leeuw als vervanging van de camera. Loopt eindeloos, transparante achtergrond.
+
+    OBS: Browserbron, URL naar dit bestand, formaat bijvoorbeeld 1080x1080 (of je camerasize).
+    Opties via de URL, bijvoorbeeld avatar/index.html?bpm=128&bg=%23081014
+      bpm    tempo van de muziek (standaard 120). Tik het tempo mee met T of een klik (in OBS: rechtermuisknop
+             op de bron > Interacteren), het wordt onthouden
+      bg     achtergrondkleur, bijvoorbeeld bg=%23081014 of bg=dark (standaard transparant)
+      sway=0 geen heen-en-weer kantelen, alleen op en neer
+      fx=0   geen deeltjes en pulserende ringen, alleen de leeuw
+  -->
+  <style>
+    :root {
+      --bpm: 120;
+      --beat: calc(60s / var(--bpm));
+      --mint: #5cffb0;
+      --green: #1fe07a;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    body.dark { background: radial-gradient(ellipse at 50% 55%, #0f2a22 0%, #081014 70%); }
+
+    .scene { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+
+    /* Het logo is 896x1192: zo groot mogelijk binnen het beeld, met ruimte voor de bounce */
+    .lion-box {
+      position: relative;
+      height: min(88vh, 88vw * 1192 / 896);
+      aspect-ratio: 896 / 1192;
+    }
+
+    /* Gloed achter de leeuw: pulseert op de beat (alleen transform en opacity, dus goedkoop) */
+    .aura {
+      position: absolute; inset: -12%;
+      background: radial-gradient(closest-side, rgba(60, 255, 160, .55), rgba(31, 224, 122, .18) 55%, transparent 75%);
+      animation: aura var(--beat) ease-out infinite;
+      will-change: transform, opacity;
+    }
+    .ring {
+      position: absolute; inset: 6%;
+      border: 3px solid var(--mint);
+      border-radius: 50%;
+      opacity: 0;
+      animation: ring var(--beat) ease-out infinite;
+    }
+    .ring.b { animation-delay: calc(var(--beat) / -2); }
+
+    /* Twee lagen: .sway kantelt per twee beats links/rechts, .bounce stuitert elke beat */
+    .sway, .bounce, .lion { position: absolute; inset: 0; transform-origin: 50% 92%; }
+    .sway { animation: sway calc(var(--beat) * 4) ease-in-out infinite; }
+    .bounce { animation: bounce var(--beat) cubic-bezier(.3, 0, .4, 1) infinite; }
+    .lion img { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+    .nosway .sway { animation: none; }
+
+    /* Ogen: lichten op bij elke beat */
+    .eye {
+      position: absolute; width: 14%; aspect-ratio: 1.5; top: 36.3%;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(210, 255, 235, .95), rgba(80, 255, 170, .6) 45%, transparent 75%);
+      mix-blend-mode: screen;
+      animation: eye var(--beat) ease-out infinite;
+    }
+    .eye.l { left: 33.7%; }
+    .eye.r { left: 52.7%; }
+
+    /* Deeltjes die opstijgen */
+    .motes { position: absolute; inset: 0; pointer-events: none; }
+    .mote {
+      position: absolute; bottom: 8%; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--mint); box-shadow: 0 0 14px 4px rgba(92, 255, 176, .7);
+      opacity: 0;
+      animation: rise calc(var(--beat) * 12) linear infinite;
+    }
+    .mote:nth-child(1) { left: 12%; animation-delay: calc(var(--beat) * -1); }
+    .mote:nth-child(2) { left: 26%; animation-delay: calc(var(--beat) * -5);  width: 7px; height: 7px; }
+    .mote:nth-child(3) { left: 40%; animation-delay: calc(var(--beat) * -9); }
+    .mote:nth-child(4) { left: 58%; animation-delay: calc(var(--beat) * -3);  width: 8px; height: 8px; }
+    .mote:nth-child(5) { left: 72%; animation-delay: calc(var(--beat) * -7); }
+    .mote:nth-child(6) { left: 86%; animation-delay: calc(var(--beat) * -11); width: 6px; height: 6px; }
+    .nofx .motes, .nofx .ring, .nofx .aura { display: none; }
+
+    /* Beat-hit (0%) is het laagste punt: de kop "valt" in de beat en veert dan terug omhoog */
+    @keyframes bounce {
+      0%   { transform: translateY(2.6%) scale(1.025, .965); }
+      18%  { transform: translateY(-1.4%) scale(.99, 1.02); }
+      60%  { transform: translateY(-.4%) scale(1, 1); }
+      100% { transform: translateY(2.6%) scale(1.025, .965); }
+    }
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2.2deg); }
+      50%      { transform: rotate(2.2deg); }
+    }
+    @keyframes aura {
+      0%   { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(.94);  opacity: .55; }
+    }
+    @keyframes ring {
+      0%   { transform: scale(.85); opacity: .55; }
+      100% { transform: scale(1.35); opacity: 0; }
+    }
+    @keyframes eye {
+      0%   { opacity: 1;  transform: scale(1.25); }
+      100% { opacity: .35; transform: scale(.9); }
+    }
+    @keyframes rise {
+      0%   { transform: translate(0, 0) scale(.6); opacity: 0; }
+      10%  { opacity: .9; }
+      50%  { transform: translate(14px, -45vh) scale(1); }
+      100% { transform: translate(-10px, -90vh) scale(.4); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sway, .bounce, .eye, .aura, .ring, .mote { animation-duration: calc(var(--beat) * 2); }
+    }
+  </style>
+</head>
+<body>
+<div class="scene" id="scene">
+  <div class="lion-box">
+    <div class="aura"></div>
+    <div class="ring"></div><div class="ring b"></div>
+    <div class="sway"><div class="bounce"><div class="lion">
+      <img src="lion.png" alt="v0lky1 lion">
+      <span class="eye l"></span><span class="eye r"></span>
+    </div></div></div>
+    <div class="motes"><span class="mote"></span><span class="mote"></span><span class="mote"></span><span class="mote"></span><span class="mote"></span><span class="mote"></span></div>
+  </div>
+</div>
+<script>
+  const params = new URLSearchParams(location.search);
+  const STORAGE_KEY = "v0lky1.lionBpm";
+  const root = document.documentElement;
+  const MIN_BPM = 40, MAX_BPM = 240;
+
+  function setBpm(bpm) {
+    root.style.setProperty("--bpm", Math.min(MAX_BPM, Math.max(MIN_BPM, bpm)));
+  }
+
+  // bpm uit de URL wint; anders het laatst meegetikte tempo; anders 120
+  let saved = null;
+  try { saved = Number(localStorage.getItem(STORAGE_KEY)); } catch {}
+  setBpm(Number(params.get("bpm")) || saved || 120);
+
+  const bg = params.get("bg");
+  if (bg === "dark") document.body.classList.add("dark");
+  else if (bg) document.body.style.background = bg;
+  if (params.get("sway") === "0") document.body.classList.add("nosway");
+  if (params.get("fx") === "0") document.body.classList.add("nofx");
+
+  // Tap-tempo: gemiddelde van de laatste tikken, een pauze van meer dan 2s begint opnieuw
+  let taps = [];
+  function tap() {
+    const now = performance.now();
+    if (taps.length && now - taps.at(-1) > 2000) taps = [];
+    taps.push(now);
+    taps = taps.slice(-8);
+    if (taps.length < 3) return;
+    const bpm = Math.round(60000 / ((taps.at(-1) - taps[0]) / (taps.length - 1)));
+    setBpm(bpm);
+    try { localStorage.setItem(STORAGE_KEY, bpm); } catch {}
+  }
+  addEventListener("keydown", (e) => { if (e.key.toLowerCase() === "t") tap(); });
+  addEventListener("pointerdown", tap);
+</script>
+</body>
+</html>
