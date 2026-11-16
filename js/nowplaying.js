@@ -1,3 +1,4 @@
+import "./dance.js"; // tempo van de dans
 import { watchNowPlaying } from "./ytm.js";
 
 const SCROLL_PX_PER_SEC = 30;
@@ -11,6 +12,7 @@ let current = null;
 export function hideSong() {
   current = null;
   card.classList.remove("show");
+  document.body.classList.remove("music"); // het logo bij de webcam stopt met dansen
 }
 
 // Toont "artiest - titel". Is de tekst te breed, dan schuift hij heen en weer.
@@ -29,6 +31,7 @@ export function showSong(artist, title) {
     });
   }
   card.classList.add("show");
+  document.body.classList.add("music");
 }
 
 export function startNowPlaying() {

@@ -11,6 +11,7 @@
 //   debug     toont de gereserveerde zones, nepberichten in de chat en de muzieknoten, zonder Twitch-verbinding
 //
 // De druid danst en de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
+import "./dance.js"; // tempo van de dans
 import { watchNowPlaying } from "./ytm.js";
 import { getSession } from "./auth.js";
 import { TwitchHub } from "./hub.js";
@@ -80,12 +81,6 @@ if (countdownEl) {
   tick();
   setInterval(tick, TICK_MS);
 }
-
-// Tempo van de dans: het door jou meegetikte tempo van de avatar (avatar/index.html), anders 120
-try {
-  const bpm = Number(localStorage.getItem("v0lky1.lionBpm"));
-  if (bpm >= 40 && bpm <= 240) document.documentElement.style.setProperty("--bpm", bpm);
-} catch {}
 
 // Muzieknoten die over het hele scherm opstijgen; ze zijn alleen zichtbaar met body.music (scenes.css)
 const NOTE_GLYPHS = ["♪", "♫", "♩", "♬"];

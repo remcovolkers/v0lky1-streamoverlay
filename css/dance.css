@@ -1,0 +1,37 @@
+/* Gedeelde dans van het logo (scenes en overlay), zoals de leeuw in avatar/index.html.
+   Tempo: js/dance.js zet --bpm op het meegetikte tempo van de avatar. Gebruik:
+     animation: dance-bounce var(--beat) cubic-bezier(0.3, 0, 0.4, 1) infinite,
+                dance-sway calc(var(--beat) * 4) ease-in-out infinite;
+   translate/scale en rotate zijn losse eigenschappen, dus de animaties botsen niet met transform.
+   --dance schaalt het stuiteren (standaard 1, bedoeld voor een logo van ongeveer 200px hoog). */
+:root {
+  --bpm: 120;
+  --beat: calc(60s / var(--bpm));
+}
+
+/* Beat-hit (0%) is het laagste punt: het logo valt in de beat en veert dan terug omhoog */
+@keyframes dance-bounce {
+  0%,
+  100% {
+    translate: 0 calc(9px * var(--dance, 1));
+    scale: 1.04 0.94;
+  }
+  18% {
+    translate: 0 calc(-13px * var(--dance, 1));
+    scale: 0.985 1.04;
+  }
+  60% {
+    translate: 0 calc(-4px * var(--dance, 1));
+    scale: 1 1;
+  }
+}
+
+@keyframes dance-sway {
+  0%,
+  100% {
+    rotate: -4.5deg;
+  }
+  50% {
+    rotate: 4.5deg;
+  }
+}

@@ -1,11 +1,10 @@
+@import url("dance.css");
+
 /* ===== v0lky1 / Volkydruid scenes: gedeelde stijl ===== */
 /* Fonts komen uit fonts.css. De kleuren per spel (accent, achtergrond, paneel, tekst) staan in
    theme.css in de map van het spel (retail/, forever/); hier staat alleen de vorm en beweging. */
 
 :root {
-  /* Tempo van de dans en de noten; scenes.js zet --bpm op het meegetikte tempo van de avatar */
-  --bpm: 120;
-  --beat: calc(60s / var(--bpm));
   --line: rgba(var(--edge-rgb), 0.5);
   --glow: 0 0 18px rgba(var(--accent-rgb), 0.22);
 }
@@ -299,9 +298,7 @@ body.debug .zone {
   transform-origin: 50% 92%;
 }
 
-/* De druid danst alleen als er muziek speelt (body.music, gezet door scenes.js), zoals de leeuw in
-   avatar/index.html: stuiteren op de beat, kantelen per twee beats. translate/scale en rotate zijn
-   losse eigenschappen, dus de animaties botsen niet. */
+/* De druid danst alleen als er muziek speelt (body.music, gezet door scenes.js); de beweging staat in dance.css */
 body.music .logo-wrap img {
   animation:
     dance-bounce var(--beat) cubic-bezier(0.3, 0, 0.4, 1) infinite,
@@ -311,33 +308,6 @@ body.music .logo-wrap img {
 @keyframes spin {
   to {
     --a: 360deg;
-  }
-}
-
-/* Beat-hit (0%) is het laagste punt: de druid valt in de beat en veert dan terug omhoog */
-@keyframes dance-bounce {
-  0%,
-  100% {
-    translate: 0 9px;
-    scale: 1.04 0.94;
-  }
-  18% {
-    translate: 0 -13px;
-    scale: 0.985 1.04;
-  }
-  60% {
-    translate: 0 -4px;
-    scale: 1 1;
-  }
-}
-
-@keyframes dance-sway {
-  0%,
-  100% {
-    rotate: -4.5deg;
-  }
-  50% {
-    rotate: 4.5deg;
   }
 }
 

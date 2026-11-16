@@ -1,3 +1,5 @@
+@import url("dance.css");
+
 /* Webcam-frame: draaiende gloed in de accentkleur rond een uitgespaarde 400x225 opening.
    De webcam zelf zet je in OBS onder deze overlay, precies in het gat. */
 @property --a {
@@ -80,6 +82,16 @@ body.preview .cam {
   top: -22px;
   height: 100px;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px rgba(var(--logo-glow-rgb), 0.5));
+  transform-origin: 50% 92%;
+}
+
+/* Het logo danst alleen als er muziek speelt (body.music, gezet door js/nowplaying.js); de beweging
+   staat in dance.css, hier iets kleiner omdat het logo maar 100px hoog is */
+body.music .cam .badge {
+  --dance: 0.5;
+  animation:
+    dance-bounce var(--beat) cubic-bezier(0.3, 0, 0.4, 1) infinite,
+    dance-sway calc(var(--beat) * 4) ease-in-out infinite;
 }
 
 @keyframes ring-spin {
