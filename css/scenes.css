@@ -296,9 +296,13 @@ body.debug .zone {
   position: relative;
   height: 200px;
   filter: drop-shadow(0 0 18px rgba(var(--logo-glow-rgb), 0.45));
-  /* De druid danst zoals de leeuw in avatar/index.html: stuiteren op de beat, kantelen per twee beats.
-     translate/scale en rotate zijn losse eigenschappen, dus de animaties botsen niet. */
   transform-origin: 50% 92%;
+}
+
+/* De druid danst alleen als er muziek speelt (body.music, gezet door scenes.js), zoals de leeuw in
+   avatar/index.html: stuiteren op de beat, kantelen per twee beats. translate/scale en rotate zijn
+   losse eigenschappen, dus de animaties botsen niet. */
+body.music .logo-wrap img {
   animation:
     dance-bounce var(--beat) cubic-bezier(0.3, 0, 0.4, 1) infinite,
     dance-sway calc(var(--beat) * 4) ease-in-out infinite;

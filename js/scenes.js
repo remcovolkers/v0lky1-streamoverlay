@@ -10,7 +10,7 @@
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
 //   debug     toont de gereserveerde zones, nepberichten in de chat en de muzieknoten, zonder Twitch-verbinding
 //
-// De druid danst altijd; de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
+// De druid danst en de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
 import { watchNowPlaying } from "./ytm.js";
 import { getSession } from "./auth.js";
 import { TwitchHub } from "./hub.js";
