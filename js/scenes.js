@@ -8,6 +8,7 @@
 //   title     vervangt de hoofdtitel
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
+//   rings     de vape-rook blaast altijd rookringen (anders gebeurt dat 1 op de 20 keer)
 //   debug     toont de gereserveerde zones, nepberichten in de chat en de muzieknoten, zonder Twitch-verbinding
 //
 // De druid danst en de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
@@ -109,6 +110,34 @@ if (logoImg) {
     vape.append(puff);
   }
   logoImg.after(vape);
+
+  // Zeldzaam: een paar rookringen in plaats van de wolk. Drie ringen die na elkaar naar de kijker toe vliegen.
+  const RING_CHANCE = 1 / 20; // kans per uitademing; met ?rings altijd
+  const RINGS = [
+    { lag: 0, rx: 10, ry: -30, rs: 13 },
+    { lag: 0.5, rx: 35, ry: -50, rs: 15 },
+    { lag: 1.0, rx: -10, ry: -70, rs: 17 },
+  ];
+  const rings = document.createElement("div");
+  rings.className = "vape-rings";
+  for (const r of RINGS) {
+    const ring = document.createElement("span");
+    ring.className = "smoke-ring";
+    ring.style.cssText = `--lag:${r.lag}s;--rx:${r.rx}px;--ry:${r.ry}px;--rs:${r.rs}`;
+    rings.append(ring);
+  }
+  vape.after(rings);
+
+  // Een nieuwe cyclus begint als het eerste wolkje zijn animatie opnieuw start. De rustfase (inhaleren)
+  // duurt dan nog ~3s, dus de ringen starten kort daarvoor en alles is binnen 8s weer voorbij.
+  vape.addEventListener("animationiteration", (e) => {
+    if (e.target !== vape.firstElementChild) return;
+    const ringTime = params.has("rings") || Math.random() < RING_CHANCE;
+    vape.classList.toggle("quiet", ringTime);
+    if (!ringTime) return;
+    setTimeout(() => rings.classList.add("go"), 2600);
+    setTimeout(() => rings.classList.remove("go"), 7400);
+  });
 }
 
 // Muzieknoten die over het hele scherm opstijgen; ze zijn alleen zichtbaar met body.music (scenes.css)

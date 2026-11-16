@@ -301,13 +301,61 @@ body.debug .zone {
 /* Vape-rook uit de bek van het logo (scenes.js maakt de wolkjes aan; alleen waar een logo staat).
    Een cyclus van 8s: eerst even inhaleren (niets), dan stijgt er een grote, wazige wolk op die uitwaaiert.
    --smoke-y is de hoogte van de bek in .logo-wrap; staat per thema in theme.css (standaard 63%). */
-.vape {
+.vape,
+.vape-rings {
   position: absolute;
   left: 50%;
   top: var(--smoke-y, 63%);
   width: 0;
   height: 0;
   pointer-events: none;
+}
+
+/* Zelden (1 op de 20 uitademingen, of altijd met ?rings) blaast hij rookringen in plaats van een wolk:
+   scenes.js zet dan .quiet op de wolk (vervaagt) en .go op de ringen (starten hun animatie). */
+.vape {
+  transition: opacity 0.6s;
+}
+
+.vape.quiet {
+  opacity: 0;
+}
+
+.smoke-ring {
+  position: absolute;
+  left: -30px;
+  top: -26px;
+  width: 60px;
+  height: 52px;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5), inset 0 0 8px rgba(var(--accent-rgb), 0.35);
+  filter: blur(1px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* De ringen vliegen naar de kijker toe: ze beginnen klein bij de bek, worden steeds sneller groter (de
+   ease-in geeft het perspectief) en zijn zo groot dat ze het scherm uit vliegen, terwijl ze vervagen. */
+.vape-rings.go .smoke-ring {
+  animation: ring-blow 3.6s cubic-bezier(0.6, 0.05, 0.9, 0.5) var(--lag) both;
+}
+
+@keyframes ring-blow {
+  0% {
+    transform: translate(0, 0) rotate(-8deg) scale(0.25);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.95;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(var(--rx), var(--ry)) rotate(-8deg) scale(var(--rs));
+    opacity: 0;
+  }
 }
 
 .puff {
