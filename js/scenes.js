@@ -8,7 +8,9 @@
 //   title     vervangt de hoofdtitel
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
-//   debug     toont de gereserveerde zones en nepberichten in de chat, zonder Twitch-verbinding
+//   debug     toont de gereserveerde zones, nepberichten in de chat en de muzieknoten, zonder Twitch-verbinding
+//
+// De druid danst altijd; de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
 import { watchNowPlaying } from "./ytm.js";
 import { getSession } from "./auth.js";
 import { TwitchHub } from "./hub.js";
@@ -79,20 +81,55 @@ if (countdownEl) {
   setInterval(tick, TICK_MS);
 }
 
-// Now playing: alleen zichtbaar als er muziek speelt (zelfde koppeling als de overlay)
+// Tempo van de dans: het door jou meegetikte tempo van de avatar (avatar/index.html), anders 120
+try {
+  const bpm = Number(localStorage.getItem("v0lky1.lionBpm"));
+  if (bpm >= 40 && bpm <= 240) document.documentElement.style.setProperty("--bpm", bpm);
+} catch {}
+
+// Muzieknoten die over het hele scherm opstijgen; ze zijn alleen zichtbaar met body.music (scenes.css)
+const NOTE_GLYPHS = ["♪", "♫", "♩", "♬"];
+const NOTE_COUNT = 26;
+const notesEl = document.createElement("div");
+notesEl.className = "notes";
+for (let i = 0; i < NOTE_COUNT; i++) {
+  const dur = 11 + Math.random() * 7;
+  const note = document.createElement("span");
+  note.className = "note";
+  note.textContent = NOTE_GLYPHS[i % NOTE_GLYPHS.length];
+  note.style.cssText = [
+    `--x:${Math.round(20 + (i + Math.random() * 0.8) * ((1920 - 80) / NOTE_COUNT))}px`, // gelijkmatig over de breedte
+    `--size:${Math.round(28 + Math.random() * 40)}px`,
+    `--dur:${dur.toFixed(1)}s`,
+    `--delay:-${(Math.random() * dur).toFixed(1)}s`, // negatief: het scherm is meteen gevuld
+    `--tilt:${Math.round(8 + Math.random() * 18)}deg`,
+    `--alpha:${(0.3 + Math.random() * 0.35).toFixed(2)}`,
+  ].join(";");
+  notesEl.append(note);
+}
+// Direct na de achtergrond, dus onder alle inhoud
+document.querySelector(".bg").after(notesEl);
+
+// Now playing: alleen zichtbaar als er muziek speelt (zelfde koppeling als de overlay).
+// Dezelfde status zet de noten aan (body.music).
 const nowPlaying = document.getElementById("nowplaying");
 const songEl = nowPlaying.querySelector(".song");
 
 if (params.has("debug")) {
   // Debug: vast kaartje met het voorbeeldnummer uit de HTML, zonder de app te vragen
   nowPlaying.classList.add("show");
+  document.body.classList.add("music");
 } else {
   watchNowPlaying({
     onSong: (artist, title) => {
       songEl.textContent = artist ? `${artist} - ${title}` : title;
       nowPlaying.classList.add("show");
+      document.body.classList.add("music");
     },
-    onHide: () => nowPlaying.classList.remove("show"),
+    onHide: () => {
+      nowPlaying.classList.remove("show");
+      document.body.classList.remove("music");
+    },
   });
 }
 

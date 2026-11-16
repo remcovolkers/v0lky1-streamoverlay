@@ -3,6 +3,9 @@
    theme.css in de map van het spel (retail/, forever/); hier staat alleen de vorm en beweging. */
 
 :root {
+  /* Tempo van de dans en de noten; scenes.js zet --bpm op het meegetikte tempo van de avatar */
+  --bpm: 120;
+  --beat: calc(60s / var(--bpm));
   --line: rgba(var(--edge-rgb), 0.5);
   --glow: 0 0 18px rgba(var(--accent-rgb), 0.22);
 }
@@ -150,6 +153,65 @@ body {
   }
 }
 
+/* ---------- muzieknoten over het hele scherm (alleen als er muziek speelt) ----------
+   scenes.js maakt de noten aan en zet body.music zodra de player een nummer speelt. */
+.notes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s, visibility 0s 0.8s;
+}
+
+body.music .notes {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s;
+}
+
+.note {
+  position: absolute;
+  top: 1080px;
+  left: var(--x);
+  font: 400 var(--size) / 1 "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif;
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(var(--accent-rgb), 0.7);
+  opacity: 0;
+  animation:
+    note-rise var(--dur) linear var(--delay) infinite,
+    note-wobble calc(var(--beat) * 4) ease-in-out var(--delay) infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes note-rise {
+  0% {
+    transform: translateY(0) rotate(calc(var(--tilt) * -1));
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: var(--alpha);
+  }
+  50% {
+    transform: translateY(-640px) rotate(var(--tilt));
+  }
+  100% {
+    transform: translateY(-1260px) rotate(calc(var(--tilt) * -1));
+    opacity: 0;
+  }
+}
+
+@keyframes note-wobble {
+  from {
+    translate: -26px 0;
+  }
+  to {
+    translate: 26px 0;
+  }
+}
+
 /* Gereserveerde zones voor de live overlay (webcam en chat); blijven leeg.
    Met ?debug krijgen ze een rode stippellijn. */
 .zone {
@@ -234,7 +296,12 @@ body.debug .zone {
   position: relative;
   height: 200px;
   filter: drop-shadow(0 0 18px rgba(var(--logo-glow-rgb), 0.45));
-  animation: bob 6s ease-in-out infinite;
+  /* De druid danst zoals de leeuw in avatar/index.html: stuiteren op de beat, kantelen per twee beats.
+     translate/scale en rotate zijn losse eigenschappen, dus de animaties botsen niet. */
+  transform-origin: 50% 92%;
+  animation:
+    dance-bounce var(--beat) cubic-bezier(0.3, 0, 0.4, 1) infinite,
+    dance-sway calc(var(--beat) * 4) ease-in-out infinite;
 }
 
 @keyframes spin {
@@ -243,9 +310,30 @@ body.debug .zone {
   }
 }
 
-@keyframes bob {
+/* Beat-hit (0%) is het laagste punt: de druid valt in de beat en veert dan terug omhoog */
+@keyframes dance-bounce {
+  0%,
+  100% {
+    translate: 0 9px;
+    scale: 1.04 0.94;
+  }
+  18% {
+    translate: 0 -13px;
+    scale: 0.985 1.04;
+  }
+  60% {
+    translate: 0 -4px;
+    scale: 1 1;
+  }
+}
+
+@keyframes dance-sway {
+  0%,
+  100% {
+    rotate: -4.5deg;
+  }
   50% {
-    transform: translateY(-6px);
+    rotate: 4.5deg;
   }
 }
 
@@ -559,6 +647,11 @@ html.ending body {
 }
 
 .ending .bg {
+  -webkit-mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
+  mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
+}
+
+.ending .notes {
   -webkit-mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
   mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
 }
