@@ -82,6 +82,35 @@ if (countdownEl) {
   setInterval(tick, TICK_MS);
 }
 
+// Vape-rook uit de bek van het logo (css/scenes.css). Zonder logo (ending) geen rook.
+// De wolkjes worden berekend, met een vaste spreiding zodat elke cyclus er hetzelfde dik uitziet:
+// latere wolkjes beginnen later in de uitademing, waaieren verder uit en zijn iets ijler.
+const SMOKE_PUFFS = 26; // meer = dikkere wolk
+const SMOKE_SIZE = 90; // basisgrootte in px (de wolkjes groeien nog flink uit)
+const SMOKE_SPREAD = 1; // zijwaartse uitwaaiering
+const SMOKE_RISE = 1; // hoe hoog de wolk stijgt
+const frac = (x) => x - Math.floor(x);
+
+const logoImg = document.querySelector(".logo-wrap img");
+if (logoImg) {
+  const vape = document.createElement("div");
+  vape.className = "vape";
+  for (let i = 0; i < SMOKE_PUFFS; i++) {
+    const t = i / (SMOKE_PUFFS - 1); // 0 = eerste wolkje, 1 = laatste
+    const size = SMOKE_SIZE * (0.9 + frac(i * 0.618) * 0.6);
+    const lag = t * 2.4;
+    const dx = (frac(i * 0.754) - 0.5) * 2 * (140 + t * 220) * SMOKE_SPREAD;
+    const rise = -(150 + frac(i * 0.381) * 200 + t * 70) * SMOKE_RISE;
+    const grow = 3.6 + frac(i * 0.529) * 2.6;
+    const alpha = 0.8 - t * 0.35;
+    const puff = document.createElement("span");
+    puff.className = "puff";
+    puff.style.cssText = `--size:${size.toFixed(0)}px;--lag:${lag.toFixed(2)}s;--rise:${rise.toFixed(0)}px;--dx:${dx.toFixed(0)}px;--grow:${grow.toFixed(2)};--alpha:${alpha.toFixed(2)}`;
+    vape.append(puff);
+  }
+  logoImg.after(vape);
+}
+
 // Muzieknoten die over het hele scherm opstijgen; ze zijn alleen zichtbaar met body.music (scenes.css)
 const NOTE_GLYPHS = ["♪", "♫", "♩", "♬"];
 const NOTE_COUNT = 26;

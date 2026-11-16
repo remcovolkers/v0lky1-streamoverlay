@@ -39,6 +39,9 @@
   /* Het logo wordt rood in de "te laat"-scène (alles eerst grijs, dan roodbruin getint) */
   --late-logo-filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(4);
 
+  /* Hoogte van de bek in het logo (voor de vape-rook in de scenes) */
+  --smoke-y: 59%;
+
   /* Zacht schaduwlicht in plaats van neongloed (scenes) */
   --glow: 0 4px 14px rgba(0, 0, 0, 0.45);
 

@@ -298,6 +298,48 @@ body.debug .zone {
   transform-origin: 50% 92%;
 }
 
+/* Vape-rook uit de bek van het logo (scenes.js maakt de wolkjes aan; alleen waar een logo staat).
+   Een cyclus van 8s: eerst even inhaleren (niets), dan stijgt er een grote, wazige wolk op die uitwaaiert.
+   --smoke-y is de hoogte van de bek in .logo-wrap; staat per thema in theme.css (standaard 63%). */
+.vape {
+  position: absolute;
+  left: 50%;
+  top: var(--smoke-y, 63%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.puff {
+  position: absolute;
+  left: calc(var(--size) / -2);
+  top: calc(var(--size) / -2);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.7), rgba(238, 247, 244, 0.4) 40%, rgba(var(--accent-rgb), 0.14) 62%, transparent 74%);
+  filter: blur(5px);
+  opacity: 0;
+  /* De negatieve 2.5s zorgt dat de eerste wolk meteen na het laden komt in plaats van na 3 seconden */
+  animation: puff 8s cubic-bezier(0.2, 0.6, 0.3, 1) calc(var(--lag) - 2.5s) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes puff {
+  0%,
+  38% {
+    transform: translate(0, 0) scale(0.15);
+    opacity: 0;
+  }
+  42% {
+    opacity: var(--alpha);
+  }
+  100% {
+    transform: translate(var(--dx), var(--rise)) scale(var(--grow));
+    opacity: 0;
+  }
+}
+
 /* De druid danst alleen als er muziek speelt (body.music, gezet door scenes.js); de beweging staat in dance.css */
 body.music .logo-wrap img {
   animation:

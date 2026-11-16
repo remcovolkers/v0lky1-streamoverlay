@@ -36,4 +36,7 @@
 
   /* Het logo wordt rood in de "te laat"-scène */
   --late-logo-filter: hue-rotate(222deg) saturate(1.4);
+
+  /* Hoogte van de bek in het logo (voor de vape-rook in de scenes) */
+  --smoke-y: 64%;
 }
