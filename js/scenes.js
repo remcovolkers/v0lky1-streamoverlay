@@ -8,10 +8,11 @@
 //   title     vervangt de hoofdtitel
 //   subtitle  vervangt de ondertitel
 //   chat=off  verbergt de chat (bijvoorbeeld als je de overlay er al overheen legt)
+//   lasers    de lasers (alleen bij muziek) komen continu, anders eens in de 20 tot 40 seconden
 //   rings     de vape-rook blaast altijd rookringen (anders gebeurt dat 1 op de 20 keer)
 //   debug     toont de gereserveerde zones, nepberichten in de chat en de muzieknoten, zonder Twitch-verbinding
 //
-// De druid danst en de muzieknoten verschijnen alleen als de muziekspeler een nummer afspeelt.
+// De druid danst, de muzieknoten en de lasers verschijnen alleen als de muziekspeler een nummer afspeelt.
 import "./dance.js"; // tempo van de dans
 import { watchNowPlaying } from "./ytm.js";
 import { getSession } from "./auth.js";
@@ -162,6 +163,38 @@ for (let i = 0; i < NOTE_COUNT; i++) {
 }
 // Direct na de achtergrond, dus onder alle inhoud
 document.querySelector(".bg").after(notesEl);
+
+// Lasers: bij muziek vegen er af en toe een paar dunne stralen rustig over het scherm (css/scenes.css).
+// Hoek in graden: negatief zwaait naar rechts, positief naar links. Met ?lasers komen ze elke paar seconden.
+const LASERS = [
+  { x: 200, from: -8, to: -42, dur: 6.0, alpha: 0.55 },
+  { x: 260, from: -26, to: -62, dur: 6.8, alpha: 0.4 },
+  { x: 1720, from: 8, to: 42, dur: 6.4, alpha: 0.55 },
+  { x: 1660, from: 26, to: 62, dur: 7.0, alpha: 0.4 },
+  { x: 960, from: -18, to: 18, dur: 7.4, alpha: 0.3 },
+];
+const LASER_SHOW_MS = 8000; // langer dan de langste zwaai, dan kan hij daarna opnieuw
+const LASER_GAP_MS = [14_000, 32_000]; // wachttijd tussen twee shows
+const lasersEl = document.createElement("div");
+lasersEl.className = "lasers";
+for (const l of LASERS) {
+  const laser = document.createElement("div");
+  laser.className = "laser";
+  laser.style.cssText = `--x:${l.x}px;--from:${l.from}deg;--to:${l.to}deg;--dur:${l.dur}s;--alpha:${l.alpha}`;
+  lasersEl.append(laser);
+}
+notesEl.before(lasersEl); // onder de noten en alle inhoud
+
+function laserShow() {
+  if (document.body.classList.contains("music")) {
+    lasersEl.classList.add("on");
+    setTimeout(() => lasersEl.classList.remove("on"), LASER_SHOW_MS);
+  }
+  const [min, max] = params.has("lasers") ? [500, 1500] : LASER_GAP_MS;
+  setTimeout(laserShow, LASER_SHOW_MS + min + Math.random() * (max - min));
+}
+// De eerste show komt een paar seconden nadat de pagina laadt, alleen als er dan muziek speelt
+setTimeout(laserShow, params.has("lasers") ? 1500 : 6000);
 
 // Now playing: alleen zichtbaar als er muziek speelt (zelfde koppeling als de overlay).
 // Dezelfde status zet de noten aan (body.music).

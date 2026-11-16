@@ -211,6 +211,68 @@ body.music .notes {
   }
 }
 
+/* ---------- lasers (alleen als er muziek speelt, en dan maar af en toe) ----------
+   scenes.js zet .on op .lasers voor een paar seconden: dunne stralen vanuit de bovenhoeken vegen rustig
+   over het scherm. De laag deint zacht op de beat; niet wild, en onder alle inhoud. */
+.lasers {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+body:not(.music) .lasers {
+  display: none;
+}
+
+.laser {
+  position: absolute;
+  top: -20px;
+  left: var(--x);
+  width: 4px;
+  height: 1500px;
+  margin-left: -2px;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(var(--accent-rgb), 0.75) 8%, rgba(var(--accent-rgb), 0.3) 50%, transparent 90%);
+  box-shadow: 0 0 10px 2px rgba(var(--accent-rgb), 0.35);
+  filter: blur(0.6px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.lasers.on {
+  animation: laser-beat var(--beat) ease-in-out infinite alternate;
+}
+
+.lasers.on .laser {
+  animation: laser-sweep var(--dur) ease-in-out both;
+}
+
+@keyframes laser-sweep {
+  0% {
+    rotate: var(--from);
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: var(--alpha);
+  }
+  100% {
+    rotate: var(--to);
+    opacity: 0;
+  }
+}
+
+@keyframes laser-beat {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Gereserveerde zones voor de live overlay (webcam en chat); blijven leeg.
    Met ?debug krijgen ze een rode stippellijn. */
 .zone {
@@ -715,7 +777,8 @@ html.ending body {
   mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
 }
 
-.ending .notes {
+.ending .notes,
+.ending .lasers {
   -webkit-mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
   mask-image: radial-gradient(circle at 1200px 270px, transparent 187px, #000 188px);
 }
